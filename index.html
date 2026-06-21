@@ -237,19 +237,20 @@ const backgrounds = [
     "radial-gradient(circle, #232526, #414345)"
 ];
 
-let lastIndex = -1;
+// Shuffle all memories into a random order
+let shuffledMemories = [...memories].sort(() => Math.random() - 0.5);
+let currentMemoryIndex = 0;
 
 function triggerMemory() {
 
-    let randomIndex;
+    // If we've shown every memory, reshuffle and start over
+    if (currentMemoryIndex >= shuffledMemories.length) {
+        shuffledMemories = [...memories].sort(() => Math.random() - 0.5);
+        currentMemoryIndex = 0;
+    }
 
-    do {
-        randomIndex = Math.floor(Math.random() * memories.length);
-    } while (randomIndex === lastIndex && memories.length > 1);
-
-    lastIndex = randomIndex;
-
-    const memory = memories[randomIndex];
+    const memory = shuffledMemories[currentMemoryIndex];
+    currentMemoryIndex++;
 
     const image = document.getElementById("memoryImage");
     const message = document.getElementById("memoryMessage");
