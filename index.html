@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Memory Roulette</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 1.2s ease;
+    background: radial-gradient(circle at center, #081b33, #02060f);
+    color: white;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    text-align: center;
+    padding: 2rem;
+}
+
+.title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px cyan;
+}
+
+.memory-box {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,255,255,0.3);
+    border-radius: 20px;
+    padding: 20px;
+    min-height: 500px;
+    box-shadow:
+        0 0 30px rgba(0,255,255,0.2),
+        inset 0 0 20px rgba(255,255,255,0.05);
+}
+
+#memoryImage {
+    width: 100%;
+    max-height: 450px;
+    object-fit: cover;
+    border-radius: 15px;
+    opacity: 0;
+    transition: opacity 1s ease;
+    display: none;
+}
+
+#memoryImage.show {
+    display: block;
+    opacity: 1;
+}
+
+.message {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    min-height: 60px;
+    color: #bdfcff;
+}
+
+.trigger-btn {
+    margin-top: 30px;
+    padding: 22px 50px;
+    font-size: 1.3rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    background: linear-gradient(45deg, #00f2ff, #0066ff);
+    color: white;
+    font-family: inherit;
+    transition: all .3s ease;
+    box-shadow: 0 0 30px rgba(0,255,255,.5);
+}
+
+.trigger-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 45px rgba(0,255,255,.9);
+}
+
+.trigger-btn:active {
+    transform: scale(.97);
+}
+
+.status {
+    margin-top: 15px;
+    font-size: .8rem;
+    color: rgba(255,255,255,.6);
+    letter-spacing: 2px;
+}
+
+@media (max-width: 768px) {
+    .memory-box {
+        min-height: auto;
+    }
+
+    .trigger-btn {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1 class="title">DIGITAL MEMORY ROULETTE</h1>
+
+    <div class="memory-box">
+        <img id="memoryImage" src="" alt="Memory">
+
+        <div class="message" id="memoryMessage">
+            Press the button to initiate memory stream...
+        </div>
+    </div>
+
+    <button class="trigger-btn" onclick="triggerMemory()">
+        ⚡ Trigger Memory Stream
+    </button>
+
+    <div class="status">
+        MEMORY CORE: STANDBY
+    </div>
+</div>
+
+<!-- Optional Sound -->
+<audio id="memorySound">
+    <!-- Replace with your own sound file -->
+    <source src="memory-sound.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+// =========================
+// ADD YOUR MEMORIES HERE
+// =========================
+
+const memories = [
+    {
+        photo: "images/photo1.jpg",
+        message: "Memory #001: The adventure that still makes me smile."
+    },
+    {
+        photo: "images/photo2.jpg",
+        message: "Memory #014: One of my favorite days with you."
+    },
+    {
+        photo: "images/photo3.jpg",
+        message: "Memory #027: Proof that life is better together."
+    },
+    {
+        photo: "images/photo4.jpg",
+        message: "Memory #041: I wish I could relive this day forever."
+    },
+    {
+        photo: "images/photo5.jpg",
+        message: "Memory #052: A snapshot of happiness."
+    }
+];
+
+const backgrounds = [
+    "radial-gradient(circle, #0f2027, #203a43, #2c5364)",
+    "radial-gradient(circle, #1a2980, #26d0ce)",
+    "radial-gradient(circle, #141e30, #243b55)",
+    "radial-gradient(circle, #0f0c29, #302b63, #24243e)",
+    "radial-gradient(circle, #232526, #414345)"
+];
+
+let lastIndex = -1;
+
+function triggerMemory() {
+
+    let randomIndex;
+
+    do {
+        randomIndex = Math.floor(Math.random() * memories.length);
+    } while (randomIndex === lastIndex && memories.length > 1);
+
+    lastIndex = randomIndex;
+
+    const memory = memories[randomIndex];
+
+    const image = document.getElementById("memoryImage");
+    const message = document.getElementById("memoryMessage");
+
+    image.classList.remove("show");
+
+    setTimeout(() => {
+        image.src = memory.photo;
+        image.classList.add("show");
+    }, 200);
+
+    message.style.opacity = 0;
+
+    setTimeout(() => {
+        message.textContent = memory.message;
+        message.style.opacity = 1;
+    }, 300);
+
+    // Change background
+    const bg =
+        backgrounds[Math.floor(Math.random() * backgrounds.length)];
+
+    document.body.style.background = bg;
+
+    // Play sound
+    const sound = document.getElementById("memorySound");
+
+    if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+    }
+}
+
+</script>
+
+</body>
+</html>
